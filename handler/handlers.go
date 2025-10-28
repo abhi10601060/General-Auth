@@ -12,7 +12,7 @@ import (
 
 func Pong(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Synapse Auth is Alive",
+		"message": "Auth is Alive",
 	})
 }
 
