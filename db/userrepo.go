@@ -2,22 +2,21 @@ package db
 
 import (
 	"log"
-	"os"
+	"synapse/auth/config"
 	"synapse/auth/model"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 var (
-	db_url  = os.Getenv("SYNAPSE_AUTH_DB")
+	db_url  = config.GetEnv("AUTH_DB")
 	auth_db *gorm.DB
 )
 
 func init() {
 	auth_db = connectToAuthDB()
 
-	if auth_db != nil{
+	if auth_db != nil {
 		autoMigrateModels()
 	}
 }
@@ -29,8 +28,8 @@ func connectToAuthDB() *gorm.DB {
 		log.Println("error in db connection : ", err)
 		return nil
 	}
-	log.Println("Synapse Auth Db connected Successfully")
-	
+	log.Println("Auth Db connected Successfully")
+
 	return db
 }
 
