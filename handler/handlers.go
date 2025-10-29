@@ -3,7 +3,7 @@ package handler
 import (
 	"log"
 	"net/http"
-	"synapse/auth/authjwt"
+	"synapse/auth/jwt"
 	"synapse/auth/crypt"
 	"synapse/auth/db"
 	"synapse/auth/model"
@@ -38,7 +38,7 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	jwt_token, err := authjwt.CreateJwtToken(&user)
+	jwt_token, err := jwt.CreateJwtToken(&user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Internal server error",
@@ -103,7 +103,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	jwt_token, err := authjwt.CreateJwtToken(&user)
+	jwt_token, err := jwt.CreateJwtToken(&user)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

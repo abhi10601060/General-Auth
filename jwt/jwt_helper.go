@@ -1,4 +1,4 @@
-package authjwt
+package jwt
 
 import (
 	"log"
