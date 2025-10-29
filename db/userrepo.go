@@ -60,14 +60,12 @@ func UserExist(user *model.User) bool {
 	return res > 0
 }
 
-func IsValidPassword(incominUser *model.User) bool {
-	var userFromDB model.User = model.User{Id: incominUser.Id}
-	err := auth_db.First(&userFromDB).Error
-
+func GetUserByID(incomingID string) (model.User, error) {
+	var user model.User = model.User{Id: incomingID}
+	err := auth_db.First(&user).Error
 	if err != nil {
-		log.Println("err from isValidPassword : ", err.Error())
-		return false
+		log.Println("err from getUserByID : ", err.Error())
+		return model.User{}, err
 	}
-
-	return incominUser.Password == userFromDB.Password
+	return user, nil
 }
