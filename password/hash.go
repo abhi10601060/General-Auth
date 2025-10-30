@@ -1,4 +1,4 @@
-package crypt
+package password
 
 import (
 	"golang.org/x/crypto/argon2"

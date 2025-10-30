@@ -3,8 +3,8 @@ package handler
 import (
 	"log"
 	"net/http"
-	"synapse/auth/jwt"
-	"synapse/auth/crypt"
+	"synapse/auth/token"
+	"synapse/auth/password"
 	"synapse/auth/db"
 	"synapse/auth/model"
 
@@ -38,7 +38,7 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	jwt_token, err := jwt.CreateJwtToken(&user)
+	jwt_token, err := token.CreateJwtToken(&user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Internal server error",
@@ -47,7 +47,7 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	salt, err := crypt.GenerateSalt(16)
+	salt, err := password.GenerateSalt(16)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Internal server error",
@@ -56,7 +56,7 @@ func SignUp(c *gin.Context) {
 		return
 	}
 	user.Salt = salt
-	user.Password = crypt.HashPassword(user.Password, salt)
+	user.Password = password.HashPassword(user.Password, salt)
 
 	res := db.AddUser(&user)
 	if res == -1 {
@@ -95,7 +95,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	if !crypt.VerifyPassword(user.Password, userFromDB.Salt, userFromDB.Password) {
+	if !password.VerifyPassword(user.Password, userFromDB.Salt, userFromDB.Password) {
 		c.JSON(201, gin.H{
 			"message": "Incorrect Credentials",
 		})
@@ -103,7 +103,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	jwt_token, err := jwt.CreateJwtToken(&user)
+	jwt_token, err := token.CreateJwtToken(&user)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
